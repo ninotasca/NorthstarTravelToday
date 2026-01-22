@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Articles - Northstar Travel Today</title>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <h1>Add New Articles</h1>
+            <a href="index.html" class="back-link">← Back to Site</a>
+        </header>
+
+        <main class="admin-main">
+            <section class="instructions">
+                <h2>Instructions</h2>
+                <p>Paste your new article JSON below. Click "Merge" to add them to the top of the articles list. The JSON will be validated automatically.</p>
+            </section>
+
+            <section class="json-example">
+                <h2>JSON Format Example</h2>
+                <div class="example-box">
+                    <pre><code id="example-json"></code></pre>
+                </div>
+            </section>
+
+            <section class="json-input">
+                <h2>Paste New Article(s) JSON</h2>
+                <textarea id="new-json" placeholder='Paste your JSON here. Format should be either a single object {...} or an array of objects [{...}, {...}]'></textarea>
+                <div id="status-message" class="message"></div>
+                <div class="button-group">
+                    <button class="merge-btn" onclick="mergeArticles()" id="merge-btn">Merge Articles</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="admin-script.js"></script>
+</body>
+</html>

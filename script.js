@@ -41,7 +41,10 @@ async function loadArticles() {
             throw new Error('Failed to load articles');
         }
         
-        articles = await response.json();
+        const rawArticles = await response.json();
+        articles = Array.isArray(rawArticles)
+            ? rawArticles.filter(hasRequiredFields)
+            : [];
         displayArticles();
     } catch (error) {
         console.error('Error loading articles:', error);
@@ -115,15 +118,20 @@ function displayArticles() {
 function createTopStoryArticle(article) {
     const articleDiv = document.createElement('article');
     articleDiv.className = 'top-story-article';
-    articleDiv.style.cursor = 'pointer';
+    const hasValidUrl = isValidUrl(article.url);
+    if (hasValidUrl) {
+        articleDiv.style.cursor = 'pointer';
+    }
     
     // Make entire article clickable
-    articleDiv.addEventListener('click', (e) => {
-        // Don't trigger if clicking on the read more link directly
-        if (e.target.tagName !== 'A') {
-            window.open(article.url, '_blank', 'noopener,noreferrer');
-        }
-    });
+    if (hasValidUrl) {
+        articleDiv.addEventListener('click', (e) => {
+            // Don't trigger if clicking on the read more link directly
+            if (e.target.tagName !== 'A') {
+                window.open(article.url, '_blank', 'noopener,noreferrer');
+            }
+        });
+    }
 
     // Add image if available
     if (article.image_url) {
@@ -164,17 +172,22 @@ function createTopStoryArticle(article) {
     blurb.className = 'article-blurb';
     blurb.textContent = article.blurb;
 
-    const link = document.createElement('a');
-    link.href = article.url;
-    link.className = 'read-more';
-    link.textContent = 'Read More';
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
+    let link = null;
+    if (hasValidUrl) {
+        link = document.createElement('a');
+        link.href = article.url;
+        link.className = 'read-more';
+        link.textContent = 'Read More';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+    }
 
     contentDiv.appendChild(metaDiv);
     contentDiv.appendChild(title);
     contentDiv.appendChild(blurb);
-    contentDiv.appendChild(link);
+    if (link) {
+        contentDiv.appendChild(link);
+    }
 
     contentWrapper.appendChild(brandIcon);
     contentWrapper.appendChild(contentDiv);
@@ -187,15 +200,20 @@ function createTopStoryArticle(article) {
 function createFeaturedArticle(article) {
     const articleDiv = document.createElement('article');
     articleDiv.className = 'featured-article';
-    articleDiv.style.cursor = 'pointer';
+    const hasValidUrl = isValidUrl(article.url);
+    if (hasValidUrl) {
+        articleDiv.style.cursor = 'pointer';
+    }
     
     // Make entire article clickable
-    articleDiv.addEventListener('click', (e) => {
-        // Don't trigger if clicking on the read more link directly
-        if (e.target.tagName !== 'A') {
-            window.open(article.url, '_blank', 'noopener,noreferrer');
-        }
-    });
+    if (hasValidUrl) {
+        articleDiv.addEventListener('click', (e) => {
+            // Don't trigger if clicking on the read more link directly
+            if (e.target.tagName !== 'A') {
+                window.open(article.url, '_blank', 'noopener,noreferrer');
+            }
+        });
+    }
 
     // Add image if available
     if (article.image_url) {
@@ -245,16 +263,21 @@ function createFeaturedArticle(article) {
     blurb.className = 'article-blurb';
     blurb.textContent = article.blurb;
 
-    const link = document.createElement('a');
-    link.href = article.url;
-    link.className = 'read-more';
-    link.textContent = 'Read More';
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
+    let link = null;
+    if (hasValidUrl) {
+        link = document.createElement('a');
+        link.href = article.url;
+        link.className = 'read-more';
+        link.textContent = 'Read More';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+    }
 
     contentDiv.appendChild(title);
     contentDiv.appendChild(blurb);
-    contentDiv.appendChild(link);
+    if (link) {
+        contentDiv.appendChild(link);
+    }
 
     articleDiv.appendChild(contentWrapper);
     articleDiv.appendChild(contentDiv);
@@ -266,15 +289,20 @@ function createFeaturedArticle(article) {
 function createRegularArticle(article) {
     const articleDiv = document.createElement('article');
     articleDiv.className = 'regular-article';
-    articleDiv.style.cursor = 'pointer';
+    const hasValidUrl = isValidUrl(article.url);
+    if (hasValidUrl) {
+        articleDiv.style.cursor = 'pointer';
+    }
     
     // Make entire article clickable
-    articleDiv.addEventListener('click', (e) => {
-        // Don't trigger if clicking on the read more link directly
-        if (e.target.tagName !== 'A') {
-            window.open(article.url, '_blank', 'noopener,noreferrer');
-        }
-    });
+    if (hasValidUrl) {
+        articleDiv.addEventListener('click', (e) => {
+            // Don't trigger if clicking on the read more link directly
+            if (e.target.tagName !== 'A') {
+                window.open(article.url, '_blank', 'noopener,noreferrer');
+            }
+        });
+    }
 
     const brandIcon = createBrandIcon(article.brand);
 
@@ -301,17 +329,22 @@ function createRegularArticle(article) {
     blurb.className = 'article-blurb';
     blurb.textContent = article.blurb;
 
-    const link = document.createElement('a');
-    link.href = article.url;
-    link.className = 'read-more';
-    link.textContent = 'Read More';
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
+    let link = null;
+    if (hasValidUrl) {
+        link = document.createElement('a');
+        link.href = article.url;
+        link.className = 'read-more';
+        link.textContent = 'Read More';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+    }
 
     detailsDiv.appendChild(metaDiv);
     detailsDiv.appendChild(title);
     detailsDiv.appendChild(blurb);
-    detailsDiv.appendChild(link);
+    if (link) {
+        detailsDiv.appendChild(link);
+    }
 
     articleDiv.appendChild(brandIcon);
     articleDiv.appendChild(detailsDiv);
@@ -392,6 +425,28 @@ function updatePagination() {
 function displayError(message) {
     const featuredSection = document.getElementById('featured-articles');
     featuredSection.innerHTML = `<div class="error">${message}</div>`;
+}
+
+// Validate required fields for an article
+function hasRequiredFields(article) {
+    return Boolean(
+        article &&
+        typeof article.title === 'string' && article.title.trim() &&
+        typeof article.url === 'string' && article.url.trim() &&
+        typeof article.brand === 'string' && article.brand.trim() &&
+        typeof article.blurb === 'string' && article.blurb.trim()
+    );
+}
+
+// Validate URL format (http/https)
+function isValidUrl(value) {
+    if (typeof value !== 'string') return false;
+    try {
+        const url = new URL(value);
+        return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+        return false;
+    }
 }
 
 // Format date for display
